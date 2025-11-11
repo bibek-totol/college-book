@@ -28,14 +28,14 @@ const HeroSearch = () => {
             </p>
           </div>
 
-          {/* Search Bar */}
+      
           <div className="flex flex-col sm:flex-row gap-3 max-w-2xl mx-auto animate-scale-in">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 type="text"
                 placeholder="Search for a college name..."
-                className="pl-12 h-14 text-base bg-white shadow-medium border-0 focus-visible:ring-2 focus-visible:ring-white"
+                className="pl-12 h-14 text-base bg-white  shadow-medium border-0 focus-visible:ring-2 focus-visible:ring-white"
               />
             </div>
             <Button size="lg" className="btn-gradient h-14 px-8 text-base font-semibold shadow-large">

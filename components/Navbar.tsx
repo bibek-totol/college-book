@@ -25,12 +25,13 @@ const Navbar = () => {
             <div className="p-2 gradient-primary rounded-lg group-hover:scale-110 transition-transform">
               <GraduationCap className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-              EduBook
-            </span>
+           <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+  EduBook
+</span>
+
           </Link>
 
-          {/* Desktop Navigation */}
+        
           <div className="hidden md:flex items-center gap-1">
             {navItems.map((item) => (
               <Link
@@ -43,17 +44,24 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Login Button & Theme Toggle */}
+          
           <div className="hidden md:flex items-center gap-3">
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-lg"
+              className="rounded-lg cursor-pointer"
             >
-              <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
+              {
+                theme === "dark" ? (
+                  <Sun className="h-5 w-5" />
+                ) : (
+                  <Moon className="h-5 w-5" />
+                )
+              }
+             
+              
+              
             </Button>
             <Button variant="ghost" size="sm" className="gap-2">
               <User className="h-4 w-4" />
@@ -64,7 +72,7 @@ const Navbar = () => {
             </Button>
           </div>
 
-          {/* Mobile Menu Button */}
+          
           <button
             onClick={() => setIsMenuOpen(!isMenuOpen)}
             className="md:hidden p-2 rounded-lg hover:bg-secondary transition-colors"
@@ -73,7 +81,7 @@ const Navbar = () => {
           </button>
         </div>
 
-        {/* Mobile Menu */}
+        
         {isMenuOpen && (
           <div className="md:hidden py-4 border-t border-border animate-fade-in">
             <div className="flex flex-col gap-2">
@@ -92,7 +100,7 @@ const Navbar = () => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="gap-2 justify-start"
+                  className="gap-2 justify-start cursor-pointer"
                 >
                   {theme === "dark" ? (
                     <>
