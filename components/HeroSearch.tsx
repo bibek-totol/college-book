@@ -13,7 +13,7 @@ const HeroSearch = () => {
           alt="University Campus"
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-br from-primary/90 via-primary/80 to-accent/90" />
+        
       </div>
 
     

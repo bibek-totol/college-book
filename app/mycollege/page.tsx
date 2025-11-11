@@ -127,8 +127,8 @@ const MyCollege = () => {
             const currentReview = newReview[admission.id];
 
             return (
-              <Card key={admission.id} className="shadow-card">
-                <CardHeader className="bg-gradient-primary text-white rounded-t-lg">
+              <Card key={admission.id} className="shadow-card shadow-xl">
+                <CardHeader className="bg-gradient-primary text-foreground rounded-t-lg">
                   <CardTitle className="text-2xl">{admission.collegeName}</CardTitle>
                 </CardHeader>
                 <CardContent className="p-6">
@@ -256,7 +256,7 @@ const MyCollege = () => {
 
                         <Button
                           onClick={() => handleSubmitReview(admission.id)}
-                          className="bg-gradient-primary hover:opacity-90 transition-opacity"
+                          className="bg-gradient-to-r from-primary to-accent font-bold transition-opacity"
                         >
                           Submit Review
                         </Button>
