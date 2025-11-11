@@ -30,7 +30,7 @@ const ImageGallery = () => {
               className="group relative aspect-square overflow-hidden rounded-xl shadow-medium hover:shadow-large transition-all duration-300"
             >
               <img
-                src={image.src}
+                src={typeof image.src === "string" ? image.src : image.src.src}
                 alt={image.alt}
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
               />

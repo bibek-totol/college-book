@@ -45,7 +45,11 @@ const CollegesSection = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {colleges.map((college) => (
-            <CollegeCard key={college.name} {...college} />
+            <CollegeCard
+              key={college.name}
+              {...college}
+              image={typeof college.image === "string" ? college.image : college.image.src}
+            />
           ))}
         </div>
       </div>
