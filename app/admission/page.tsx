@@ -61,7 +61,7 @@ const Admission = () => {
     localStorage.setItem("admissions", JSON.stringify(submissions));
 
     toast?.success("Application submitted successfully!");
-    router.push("/my-college");
+    router.push("/mycollege");
   };
 
   return (
@@ -201,7 +201,7 @@ const Admission = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
+                  className="w-full bg-gradient-to-r from-primary to-accent font-bold transition-opacity"
                   size="lg"
                 >
                   Submit Application

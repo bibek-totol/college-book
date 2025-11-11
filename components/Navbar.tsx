@@ -13,7 +13,7 @@ const Navbar = () => {
     { name: "Home", path: "/" },
     { name: "Colleges", path: "/colleges" },
     { name: "Admission", path: "/admission" },
-    { name: "My College", path: "/my-college" },
+    { name: "My College", path: "/mycollege" },
   ];
 
   return (
