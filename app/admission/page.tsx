@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { colleges } from "@/data/colleges";
+import { toast } from "@/components/ui/sonner";
 
 
 const Admission = () => {
@@ -75,7 +76,7 @@ const Admission = () => {
           </p>
         </div>
 
-        {/* College Selection */}
+        
         <Card className="mb-8 shadow-card">
           <CardHeader>
             <CardTitle>Select a College</CardTitle>
@@ -102,7 +103,7 @@ const Admission = () => {
           </CardContent>
         </Card>
 
-        {/* Admission Form */}
+        
         {selectedCollege && (
           <Card className="shadow-card">
             <CardHeader>

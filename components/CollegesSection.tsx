@@ -1,35 +1,8 @@
 import CollegeCard from "./CollegeCard";
-import college1 from "@/assets/college-1.jpg";
-import college2 from "@/assets/college-2.jpg";
-import college3 from "@/assets/college-3.jpg";
+import { colleges } from "@/data/colleges";
 
 const CollegesSection = () => {
-  const colleges = [
-    {
-      image: college1,
-      name: "Stanford University",
-      admissionDates: "Applications open: Oct 1 - Dec 15",
-      events: "Annual Tech Summit, Cultural Fest 2024",
-      research: "AI & Machine Learning, Biotechnology",
-      sports: "Basketball Champions, Olympic Training",
-    },
-    {
-      image: college2,
-      name: "MIT Boston",
-      admissionDates: "Early Action: Nov 1 - Jan 15",
-      events: "Innovation Week, Startup Bootcamp",
-      research: "Robotics, Quantum Computing, Clean Energy",
-      sports: "Rowing Team, Track & Field Excellence",
-    },
-    {
-      image: college3,
-      name: "Harvard College",
-      admissionDates: "Regular Decision: Dec 1 - Jan 31",
-      events: "Leadership Summit, Global Conference",
-      research: "Law & Policy, Medical Research, Economics",
-      sports: "Football Legacy, Swimming Champions",
-    },
-  ];
+  
 
   return (
     <section className="py-20 bg-secondary/30">
@@ -44,11 +17,11 @@ const CollegesSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {colleges.map((college) => (
+          {colleges.filter((college) => Number(college.id) < 4).map((college) => (
             <CollegeCard
-              key={college.name}
-              {...college}
-              image={typeof college.image === "string" ? college.image : college.image.src}
+              key={college.id}
+              college={college} 
+              showDetails={false} 
             />
           ))}
         </div>
