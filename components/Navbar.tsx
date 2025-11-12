@@ -61,13 +61,17 @@ const Navbar = () => {
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            <Button variant="ghost" size="sm" className="gap-2">
+            {/* <Button variant="ghost" size="sm" className="gap-2">
               <User className="h-4 w-4" />
               Login
-            </Button>
+            </Button> */}
+            <Link href="/auth">
             <Button size="sm" className="btn-gradient">
-              Sign Up
+             <User className="h-6 w-6" />
+              Sign Up or Login
+            
             </Button>
+            </Link>
           </div>
 
           <button
