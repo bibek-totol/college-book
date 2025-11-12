@@ -1,31 +1,58 @@
+"use client";
+import { useEffect, useState } from "react";
 import { Star } from "lucide-react";
 import { Card } from "./ui/card";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const ReviewsSection = () => {
-  const reviews = [
+  const [reviews, setReviews] = useState<(any)[]>([]);
+
+  
+  const defaultReviews = [
     {
       name: "Alex Thompson",
       avatar: "AT",
       rating: 5,
       college: "Stanford University",
-      review: "EduBook made my college search so much easier. The detailed information and easy booking process saved me weeks of research. Highly recommended!",
+      review:
+        "EduBook made my college search so much easier. The detailed information and easy booking process saved me weeks of research. Highly recommended!",
     },
     {
       name: "Priya Sharma",
       avatar: "PS",
       rating: 5,
       college: "MIT Boston",
-      review: "Amazing platform! I found the perfect college that matched my interests in AI research. The search filters and college comparisons were incredibly helpful.",
+      review:
+        "Amazing platform! I found the perfect college that matched my interests in AI research. The search filters and college comparisons were incredibly helpful.",
     },
-    {
-      name: "Marcus Johnson",
-      avatar: "MJ",
-      rating: 5,
-      college: "Harvard College",
-      review: "The research section helped me understand each college's academic strengths. The booking process was seamless and I got accepted to my dream college!",
-    },
+    
   ];
+
+  useEffect(() => {
+    const storedReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
+    const storedAdmissions = JSON.parse(localStorage.getItem("admissions") || "[]");
+
+  
+    const merged = storedReviews.map((review:any) => {
+      const admission = storedAdmissions.find((a:any) => a.id === review.admissionId);
+      return {
+        name: admission?.candidateName || "Anonymous Student",
+        avatar: admission?.candidateName
+          ? admission.candidateName
+              .split(" ")
+              .map((n:any) => n[0])
+              .join("")
+              .toUpperCase()
+          : "ST",
+        college: admission?.collegeName || "Unknown College",
+        rating: review.rating,
+        review: review.comment,
+      };
+    });
+
+    
+    setReviews([...merged, ...defaultReviews]);
+  }, []);
 
   return (
     <section className="py-20 bg-background">
@@ -39,36 +66,43 @@ const ReviewsSection = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reviews.map((review, index) => (
-            <Card key={index} className="p-6 space-y-4 shadow-soft hover:shadow-medium transition-shadow duration-300">
-              {/* Rating */}
-              <div className="flex gap-1">
-                {[...Array(review.rating)].map((_, i) => (
-                  <Star key={i} className="h-5 w-5 fill-accent text-accent" />
-                ))}
-              </div>
-
-              {/* Review Text */}
-              <p className="text-muted-foreground leading-relaxed">
-                "{review.review}"
-              </p>
-
-              {/* Author */}
-              <div className="flex items-center gap-3 pt-4 border-t border-border">
-                <Avatar className="h-10 w-10">
-                  <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
-                    {review.avatar}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <div className="font-semibold text-foreground">{review.name}</div>
-                  <div className="text-sm text-muted-foreground">{review.college}</div>
+        {reviews.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reviews.map((review, index) => (
+              <Card
+                key={index}
+                className="p-6 space-y-4 shadow-soft hover:shadow-medium transition-shadow duration-300"
+              >
+                
+                <div className="flex gap-1">
+                  {[...Array(review.rating)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-accent text-accent" />
+                  ))}
                 </div>
-              </div>
-            </Card>
-          ))}
-        </div>
+
+              
+                <p className="text-muted-foreground leading-relaxed">
+                  "{review.review}"
+                </p>
+
+                
+                <div className="flex items-center gap-3 pt-4 border-t border-border">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-primary text-primary-foreground font-semibold">
+                      {review.avatar}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <div className="font-semibold text-foreground">{review.name}</div>
+                    <div className="text-sm text-muted-foreground">{review.college}</div>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-muted-foreground">No reviews available yet.</p>
+        )}
       </div>
     </section>
   );

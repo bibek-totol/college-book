@@ -43,7 +43,7 @@ const HeroSearch = () => {
             </Button>
           </div>
 
-          {/* Quick Stats */}
+          
           <div className="grid grid-cols-3 gap-4 sm:gap-6 max-w-2xl mx-auto pt-8">
             {[
               { label: "Colleges", value: "500+" },

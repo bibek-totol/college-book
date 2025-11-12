@@ -36,7 +36,7 @@ const Auth = () => {
         <img src={authBackground.src} alt="Auth Background" className="absolute inset-0 object-cover w-full h-full" />
        <div className="absolute inset-0 bg-background/20 backdrop-blur-md" />
       
-      <Card className="w-full max-w-md relative z-10 shadow-soft border-border animate-scale-in">
+      <Card className="w-full max-w-md relative z-10 shadow-soft border-2 border-white  animate-scale-in">
         <CardHeader className="space-y-1 text-center pb-6">
           
           <CardTitle className="text-3xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">

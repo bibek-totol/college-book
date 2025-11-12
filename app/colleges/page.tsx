@@ -12,10 +12,13 @@ const Colleges = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+<div className="flex justify-center">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 w-full max-w-4/4 lg:max-w-3/4 gap-8">
           {colleges.map((college) => (
             <CollegeCard key={college.id} college={college} showDetails />
           ))}
+        </div>
         </div>
       </div>
     </div>

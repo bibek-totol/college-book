@@ -34,7 +34,7 @@ const Footer = () => {
     <footer className="bg-foreground dark:bg-card text-background dark:text-foreground">
       <div className="container mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
-          {/* Brand */}
+      
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="p-2 gradient-primary rounded-lg">
@@ -52,13 +52,13 @@ const Footer = () => {
                   href={social.href}
                   className="w-9 h-9 rounded-lg bg-background/10 dark:bg-foreground/10 hover:bg-background/20 dark:hover:bg-foreground/20 flex items-center justify-center transition-colors"
                 >
-                  <social.icon className="h-4 w-4" />
+                  <social.icon className="h-4 w-4 text-primary" />
                 </a>
               ))}
             </div>
           </div>
 
-          {/* Links */}
+          
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="font-semibold mb-4">{category}</h3>
@@ -78,7 +78,7 @@ const Footer = () => {
           ))}
         </div>
 
-        {/* Bottom */}
+        
         <div className="pt-8 border-t border-background/10 dark:border-foreground/10">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <p className="text-background/70 dark:text-foreground/70 text-sm text-center md:text-left">

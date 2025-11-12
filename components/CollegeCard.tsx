@@ -80,7 +80,7 @@ const CollegeCard = ({ college, showDetails = false }: CollegeCardProps) => {
 
       <CardFooter className="p-6 pt-0">
         <Button
-          className="w-full bg-gradient-to-r from-primary to-accent font-bold "
+          className="w-full bg-gradient-to-r from-primary to-accent font-bold group-hover:scale-105 transition-transform duration-300 cursor-pointer"
           onClick={handleClick}
         >
           {showDetails ? "Apply Now" : "View Details"}
