@@ -1,16 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { GraduationCap, Menu, X, User, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
+import { useSession, signOut } from "next-auth/react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname(); 
+   const { data: session } = useSession();
+   useEffect(() => {
+     if (session) {
+        console.log("User session:", session);
+      }
+    }, [session]);
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -61,17 +68,30 @@ const Navbar = () => {
             >
               {theme === "dark" ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            {/* <Button variant="ghost" size="sm" className="gap-2">
-              <User className="h-4 w-4" />
-              Login
-            </Button> */}
-            <Link href="/auth">
-            <Button size="sm" className="btn-gradient">
-             <User className="h-6 w-6" />
-              Sign Up or Login
             
-            </Button>
-            </Link>
+
+            {
+                session ?(
+                  <>
+                  <img src={session.user?.image || ''} alt="User Avatar" className="w-8 h-8 rounded-full" />
+                  <span className="text-sm font-medium">{session.user?.name}</span>
+                  <Button variant="ghost" size="sm" className="gap-2 cursor-pointer" onClick={() => signOut()}>
+                  <User className="h-6 w-6" />
+                   Logout
+                 
+                 </Button>
+                  </>
+                ):(
+                  <Link href="/auth">
+                  <Button size="sm" className="btn-gradient cursor-pointer">
+                   <User className="h-6 w-6" />
+                    Sign Up or Login
+                  
+                  </Button>
+                  </Link>
+                )
+            }
+            
           </div>
 
           <button
