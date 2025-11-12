@@ -8,21 +8,59 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import authBackground from "@/assets/auth-background.jpg";
 import { signIn } from "next-auth/react";
+import { redirect} from 'next/navigation'
 
 const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login:", { email, password });
+    const result = await signIn("credentials", {
+    redirect: true,
+    email,
+    password,
+    callbackUrl: "/", 
+  });
+       
+  if(result?.error){
+    alert("Login failed: " + result.error);
+    
+  }
+  
   };
 
-  const handleRegister = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Register:", { name, email, password });
-  };
+  const handleRegister = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const res = await fetch("/api/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, email, password }),
+  });
+
+  if (res.ok) {
+    alert("Registration successful! Logging you in...");
+
+    
+    const result = await signIn("credentials", {
+      redirect: true, 
+      email,
+      password,
+      callbackUrl: "/", 
+    });
+
+    if (result?.error) {
+      alert("Auto login failed: " + result.error);
+    }
+
+  } else {
+    const data = await res.json();
+    alert(data.error || "Registration failed");
+  }
+};
+
 
   const handleSocialLogin = (provider: string) => {
     
@@ -108,7 +146,7 @@ const Auth = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-primary to-accent hover:shadow-hover transition-all"
+                    className="cursor-pointer w-full bg-gradient-to-r from-primary to-accent hover:shadow-hover transition-all"
                   >
                     Sign In
                   </Button>
@@ -171,7 +209,7 @@ const Auth = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-gradient-to-r from-primary to-accent hover:shadow-hover transition-all"
+                    className="cursor-pointer w-full bg-gradient-to-r from-primary to-accent hover:shadow-hover transition-all"
                   >
                     Create Account
                   </Button>

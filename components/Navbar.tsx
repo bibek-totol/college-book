@@ -73,7 +73,17 @@ const Navbar = () => {
             {
                 session ?(
                   <>
-                  <img src={session.user?.image || ''} alt="User Avatar" className="w-8 h-8 rounded-full" />
+                  {session.user?.image ? (
+  <img
+    src={session.user.image}
+    alt="User Avatar"
+    className="w-8 h-8 rounded-full object-cover border border-blue-400"
+  />
+) : (
+  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+    {session.user?.name?.charAt(0).toUpperCase()}
+  </div>
+)}
                   <span className="text-sm font-medium">{session.user?.name}</span>
                   <Button variant="ghost" size="sm" className="gap-2 cursor-pointer" onClick={() => signOut()}>
                   <User className="h-6 w-6" />
