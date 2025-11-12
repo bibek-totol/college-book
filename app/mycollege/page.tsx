@@ -256,7 +256,7 @@ const MyCollege = () => {
 
                         <Button
                           onClick={() => handleSubmitReview(admission.id)}
-                          className="bg-gradient-to-r from-primary to-accent font-bold transition-opacity"
+                          className="bg-gradient-to-r from-primary to-accent font-bold group-hover:scale-105 transition-transform duration-300 cursor-pointer"
                         >
                           Submit Review
                         </Button>

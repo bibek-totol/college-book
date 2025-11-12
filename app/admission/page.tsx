@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { colleges } from "@/data/colleges";
-import { toast } from "@/components/ui/sonner";
 
+import { toast } from "sonner";
 
 const Admission = () => {
   const router = useRouter();
@@ -201,7 +201,7 @@ const Admission = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary to-accent font-bold transition-opacity"
+                  className="w-full bg-gradient-to-r from-primary to-accent font-bold  group-hover:scale-105 transition-transform duration-300 cursor-pointer"
                   size="lg"
                 >
                   Submit Application
