@@ -1,5 +1,5 @@
-import CollegeCard from "./CollegeCard";
 import { colleges } from "@/data/colleges";
+import CollegeCard from "./CollegeCard";
 
 const CollegesSection = () => {
   
@@ -17,7 +17,7 @@ const CollegesSection = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {colleges.filter((college) => Number(college.id) < 4).map((college) => (
+          {colleges.slice(0, 3).map((college) => (
             <CollegeCard
               key={college.id}
               college={college} 

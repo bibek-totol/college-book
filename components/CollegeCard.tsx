@@ -15,11 +15,9 @@ const CollegeCard = ({ college, showDetails = false }: CollegeCardProps) => {
   const router = useRouter();
 
   const handleClick = () => {
-    if (showDetails) {
-      router.push(`/admission?college=${college.id}`);
-    } else {
-      router.push(`/colleges/${college.id}`);
-    }
+    
+      router.push(`/college/${college.id}`);
+    
   };
 
   return (
@@ -83,7 +81,7 @@ const CollegeCard = ({ college, showDetails = false }: CollegeCardProps) => {
           className="w-full bg-gradient-to-r from-primary to-accent font-bold group-hover:scale-105 transition-transform duration-300 cursor-pointer"
           onClick={handleClick}
         >
-          {showDetails ? "Apply Now" : "View Details"}
+          View Details
         </Button>
       </CardFooter>
     </Card>

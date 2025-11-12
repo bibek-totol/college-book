@@ -3,13 +3,36 @@ import { StaticImageData } from "next/image";
 export interface College {
   id: string;
   name: string;
-  image: StaticImageData | string;
   rating: number;
+  image: string | StaticImageData;
+  location: string;
   admissionDates: string;
-  researchProjects: number;
   events: string[];
   research: string[];
   sports: string[];
+  heroImages: string[];
+  admissionProcess: {
+    steps: string[];
+    deadlines: string;
+    documents: string[];
+  };
+  eventsDetails: {
+    name: string;
+    date: string;
+    description: string;
+    image?: string;
+  }[];
+  researchWorks: {
+    title: string;
+    description: string;
+    link?: string;
+  }[];
+  sportsDetails: {
+    name: string;
+    achievements: string;
+    icon: string;
+  }[];
+  researchProjects: number;
 }
 
 export interface Admission {
