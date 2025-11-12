@@ -120,7 +120,7 @@ const CollegeDetails = () => {
       
       <div className="container mx-auto px-4 py-12">
         <Tabs defaultValue="admission" className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:w-[600px] mx-auto">
+          <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 lg:w-[600px] mx-auto bg-gray-300 text-foreground dark:text-black">
             <TabsTrigger value="admission">Admission</TabsTrigger>
             <TabsTrigger value="events">Events</TabsTrigger>
             <TabsTrigger value="research">Research</TabsTrigger>

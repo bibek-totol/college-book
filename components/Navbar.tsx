@@ -7,17 +7,44 @@ import { GraduationCap, Menu, X, User, Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "./ui/button";
 import { useSession, signOut } from "next-auth/react";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const pathname = usePathname(); 
    const { data: session } = useSession();
+   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+const [updatedName, setUpdatedName] = useState("");
+const [updatedEmail, setUpdatedEmail] = useState("");
+
+const [user, setUser] = useState({
+  name: session?.user?.name || "",
+  email: session?.user?.email || "",
+});
+
+
    useEffect(() => {
      if (session) {
-        console.log("User session:", session);
-      }
-    }, [session]);
+        setUpdatedName(session.user?.name || "");
+        setUpdatedEmail(session.user?.email || "");
+
+         setUser({
+      name: session.user?.name || "",
+      email: session.user?.email || "",
+    });
+
+     }
+   }, [session]);
+
 
   const navItems = [
     { name: "Home", path: "/" },
@@ -26,7 +53,33 @@ const Navbar = () => {
     { name: "My College", path: "/mycollege" },
   ];
 
+  
+
+
+const handleSaveProfile = async () => {
+  try {
+    const res = await fetch("/api/update-user", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: updatedName, email: updatedEmail }),
+    });
+
+    if (res.ok) {
+      toast.success("Profile updated successfully!");
+      setIsEditModalOpen(false);
+       setUser({ name: updatedName, email: updatedEmail });
+    } else {
+      toast.error("Failed to update profile.");
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
+
   return (
+    <>
     <nav className="fixed top-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-soft">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
@@ -49,7 +102,7 @@ const Navbar = () => {
                   href={item.path}
                   className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? "bg-primary text-white"
+                      ? "bg-gradient-to-r from-primary to-accent text-white"
                       : "text-foreground hover:bg-secondary"
                   }`}
                 >
@@ -77,14 +130,40 @@ const Navbar = () => {
   <img
     src={session.user.image}
     alt="User Avatar"
-    className="w-8 h-8 rounded-full object-cover border border-blue-400"
+    className="w-8 h-8 rounded-full object-cover border border-blue-400 cursor-pointer"
   />
 ) : (
-  <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-    {session.user?.name?.charAt(0).toUpperCase()}
-  </div>
+  <DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <button className="cursor-pointer w-8 h-8 rounded-full bg-gradient-to-r from-primary to-accent flex items-center justify-center text-white font-semibold focus:outline-none">
+      {session.user?.name?.charAt(0).toUpperCase()}
+    </button>
+  </DropdownMenuTrigger>
+
+  <DropdownMenuContent align="end" className="w-56 p-2 ">
+    <div className="px-3 py-2">
+      <p className="text-sm font-medium">{session.user?.name}</p>
+      <p className="text-xs text-muted-foreground">{session.user?.email}</p>
+    </div>
+
+    <DropdownMenuSeparator />
+
+    <DropdownMenuItem
+      onClick={() => setIsEditModalOpen(true)}
+      className="cursor-pointer p-3 bg-gradient-to-r from-primary to-accent mx-auto w-full max-w-3/4 text-white"
+    >
+      <span className="text-sm font-medium mx-auto">Edit Profile</span>
+      
+    </DropdownMenuItem>
+
+  </DropdownMenuContent>
+</DropdownMenu>
+
 )}
-                  <span className="text-sm font-medium">{session.user?.name}</span>
+
+
+
+                  <span className="text-sm font-medium">{user?.name}</span>
                   <Button variant="ghost" size="sm" className="gap-2 cursor-pointer" onClick={() => signOut()}>
                   <User className="h-6 w-6" />
                    Logout
@@ -164,6 +243,50 @@ const Navbar = () => {
         )}
       </div>
     </nav>
+
+
+
+
+    {isEditModalOpen && (
+  <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-9999">
+    <div className="bg-background p-6 rounded-lg shadow-lg w-[90%] max-w-md">
+      <h2 className="text-lg font-semibold mb-4 text-center">Edit Profile</h2>
+
+      <div className="space-y-4">
+        <div>
+          <label className="text-sm font-medium">Name</label>
+          <input
+            type="text"
+            value={updatedName}
+            onChange={(e) => setUpdatedName(e.target.value)}
+            className="w-full mt-1 px-3 py-2 border rounded-md bg-background"
+          />
+        </div>
+
+        <div>
+          <label className="text-sm font-medium">Email</label>
+          <input
+            type="email"
+            value={updatedEmail}
+            onChange={(e) => setUpdatedEmail(e.target.value)}
+            className="w-full mt-1 px-3 py-2 border rounded-md bg-background"
+          />
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-2 mt-6">
+        <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+          Cancel
+        </Button>
+        <Button className="bg-gradient-to-r from-primary to-accent text-white cursor-pointer
+        " onClick={handleSaveProfile}>Save</Button>
+      </div>
+    </div>
+  </div>
+)}
+
+
+    </>
   );
 };
 
