@@ -37,32 +37,45 @@ const Admission = () => {
     }
   };
 
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent) => {
+  e.preventDefault();
 
-    if (!selectedCollege) {
-      toast?.error("Please select a college");
-      return;
-    }
+  if (!selectedCollege) {
+    toast?.error("Please select a college");
+    return;
+  }
 
-    const submissions = JSON.parse(localStorage.getItem("admissions") || "[]");
-    const college = colleges.find((c) => c.id === selectedCollege);
+  const college = colleges.find((c) => c.id === selectedCollege);
 
-    const newSubmission = {
-      id: Date.now().toString(),
-      collegeId: selectedCollege,
-      collegeName: college?.name || "",
-      ...formData,
-      imageUrl: formData.image ? URL.createObjectURL(formData.image) : null,
-      submittedAt: new Date().toISOString(),
-    };
+  const submissionData = {
+    collegeId: selectedCollege,
+    collegeName: college?.name || "",
+    ...formData,
+    imageUrl: formData.image ? URL.createObjectURL(formData.image) : null, 
+  };
 
-    submissions.push(newSubmission);
-    localStorage.setItem("admissions", JSON.stringify(submissions));
+  try {
+    const res = await fetch("/api/admissions", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(submissionData),
+    });
+
+    const result = await res.json();
+
+    if (!res.ok) throw new Error(result.error || "Submission failed");
 
     toast?.success("Application submitted successfully!");
     router.push("/mycollege");
-  };
+  } catch (err) {
+    if (err instanceof Error) {
+      toast?.error(err.message);
+    } else {
+      toast?.error(String(err));
+    }
+  }
+};
+
 
   return (
     <div className="min-h-screen pt-20 pb-12 bg-background transition-colors duration-300">

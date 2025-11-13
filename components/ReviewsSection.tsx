@@ -5,9 +5,9 @@ import { Card } from "./ui/card";
 import { Avatar, AvatarFallback } from "./ui/avatar";
 
 const ReviewsSection = () => {
-  const [reviews, setReviews] = useState<(any)[]>([]);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [admissions, setAdmissions] = useState<any[]>([]);
 
-  
   const defaultReviews = [
     {
       name: "Alex Thompson",
@@ -25,33 +25,49 @@ const ReviewsSection = () => {
       review:
         "Amazing platform! I found the perfect college that matched my interests in AI research. The search filters and college comparisons were incredibly helpful.",
     },
-    
   ];
 
   useEffect(() => {
-    const storedReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    const storedAdmissions = JSON.parse(localStorage.getItem("admissions") || "[]");
+    const fetchData = async () => {
+      try {
+      
+        const admissionsRes = await fetch("/api/admissions/all");
+        const admissionsData = await admissionsRes.json();
+        setAdmissions(admissionsData.admissions || []);
 
-  
-    const merged = storedReviews.map((review:any) => {
-      const admission = storedAdmissions.find((a:any) => a.id === review.admissionId);
-      return {
-        name: admission?.candidateName || "Anonymous Student",
-        avatar: admission?.candidateName
-          ? admission.candidateName
-              .split(" ")
-              .map((n:any) => n[0])
-              .join("")
-              .toUpperCase()
-          : "ST",
-        college: admission?.collegeName || "Unknown College",
-        rating: review.rating,
-        review: review.comment,
-      };
-    });
+      
+        const reviewsRes = await fetch("/api/reviews");
+        const reviewsData = await reviewsRes.json();
+        const storedReviews = reviewsData.reviews || [];
 
-    
-    setReviews([...merged, ...defaultReviews]);
+        
+        const mergedReviews = storedReviews.map((review: any) => {
+          const admission = admissionsData.admissions.find(
+            (a: any) => a._id === review.admissionId
+          );
+          return {
+            name: admission?.candidateName || "Anonymous Student",
+            avatar: admission?.candidateName
+              ? admission.candidateName
+                  .split(" ")
+                  .map((n: string) => n[0])
+                  .join("")
+                  .toUpperCase()
+              : "ST",
+            college: admission?.collegeName || "Unknown College",
+            rating: review.rating,
+            review: review.comment,
+          };
+        });
+
+        setReviews([...mergedReviews, ...defaultReviews]);
+      } catch (err) {
+        console.error("Failed to fetch reviews or admissions:", err);
+        setReviews([...defaultReviews]);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (
@@ -73,19 +89,16 @@ const ReviewsSection = () => {
                 key={index}
                 className="p-6 space-y-4 shadow-soft hover:shadow-medium transition-shadow duration-300"
               >
-                
                 <div className="flex gap-1">
                   {[...Array(review.rating)].map((_, i) => (
                     <Star key={i} className="h-5 w-5 fill-accent text-accent" />
                   ))}
                 </div>
 
-              
                 <p className="text-muted-foreground leading-relaxed">
                   "{review.review}"
                 </p>
 
-                
                 <div className="flex items-center gap-3 pt-4 border-t border-border">
                   <Avatar className="h-10 w-10">
                     <AvatarFallback className="bg-primary text-primary-foreground font-semibold">

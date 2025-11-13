@@ -1,13 +1,15 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Star, Mail, Phone, MapPin, Calendar, User, BookOpen } from "lucide-react";
 import { toast } from "sonner";
+import { getSession } from "next-auth/react";
 
 interface Admission {
-  id: string;
+  _id: string;
   collegeId: string;
   collegeName: string;
   candidateName: string;
@@ -21,8 +23,9 @@ interface Admission {
 }
 
 interface Review {
-  id: string;
+  _id: string;
   admissionId: string;
+  userEmail: string;
   rating: number;
   comment: string;
   createdAt: string;
@@ -32,13 +35,42 @@ const MyCollege = () => {
   const [admissions, setAdmissions] = useState<Admission[]>([]);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState<{ [key: string]: { rating: number; comment: string } }>({});
+  const [userEmail, setUserEmail] = useState<string | null>(null);
 
   useEffect(() => {
-    const storedAdmissions = JSON.parse(localStorage.getItem("admissions") || "[]");
-    const storedReviews = JSON.parse(localStorage.getItem("reviews") || "[]");
-    setAdmissions(storedAdmissions);
-    setReviews(storedReviews);
+    
+    getSession().then((session) => {
+      if (session?.user?.email) {
+        setUserEmail(session.user.email);
+        fetchAdmissions(session.user.email);
+        fetchReviews(session.user.email);
+      } else {
+        toast.error("Please log in to see your applications");
+      }
+    });
   }, []);
+
+  const fetchAdmissions = async (email: string) => {
+    try {
+      const res = await fetch(`/api/admissions?userEmail=${email}`);
+      const data = await res.json();
+      setAdmissions(data.admissions || []);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch your applications");
+    }
+  };
+
+  const fetchReviews = async (email: string) => {
+    try {
+      const res = await fetch(`/api/reviews?userEmail=${email}`);
+      const data = await res.json();
+      setReviews(data.reviews || []);
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to fetch your reviews");
+    }
+  };
 
   const handleRatingClick = (admissionId: string, rating: number) => {
     setNewReview((prev) => ({
@@ -54,38 +86,40 @@ const MyCollege = () => {
     }));
   };
 
-  const handleSubmitReview = (admissionId: string) => {
+  const handleSubmitReview = async (admissionId: string) => {
+    if (!userEmail) return toast.error("You must be logged in");
+
     const review = newReview[admissionId];
-    
-    if (!review?.rating) {
-      toast.error("Please select a rating");
-      return;
+    if (!review?.rating) return toast.error("Please select a rating");
+    if (!review?.comment?.trim()) return toast.error("Please write a comment");
+
+    try {
+      const res = await fetch("/api/reviews", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          admissionId,
+          rating: review.rating,
+          comment: review.comment,
+        }),
+      });
+      const data = await res.json();
+
+      if (res.ok) {
+        setReviews((prev) => [...prev, data.review]);
+        setNewReview((prev) => {
+          const updated = { ...prev };
+          delete updated[admissionId];
+          return updated;
+        });
+        toast.success("Review submitted successfully!");
+      } else {
+        toast.error(data.error || "Failed to submit review");
+      }
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to submit review");
     }
-
-    if (!review?.comment?.trim()) {
-      toast.error("Please write a comment");
-      return;
-    }
-
-    const newReviewObj: Review = {
-      id: Date.now().toString(),
-      admissionId,
-      rating: review.rating,
-      comment: review.comment,
-      createdAt: new Date().toISOString(),
-    };
-
-    const updatedReviews = [...reviews, newReviewObj];
-    setReviews(updatedReviews);
-    localStorage.setItem("reviews", JSON.stringify(updatedReviews));
-
-    setNewReview((prev) => {
-      const updated = { ...prev };
-      delete updated[admissionId];
-      return updated;
-    });
-
-    toast.success("Review submitted successfully!");
   };
 
   const getReviewForAdmission = (admissionId: string) => {
@@ -123,11 +157,11 @@ const MyCollege = () => {
 
         <div className="space-y-8">
           {admissions.map((admission) => {
-            const existingReview = getReviewForAdmission(admission.id);
-            const currentReview = newReview[admission.id];
+            const existingReview = getReviewForAdmission(admission._id);
+            const currentReview = newReview[admission._id];
 
             return (
-              <Card key={admission.id} className="shadow-card shadow-xl">
+              <Card key={admission._id} className="shadow-card shadow-xl">
                 <CardHeader className="bg-gradient-primary text-foreground rounded-t-lg">
                   <CardTitle className="text-2xl">{admission.collegeName}</CardTitle>
                 </CardHeader>
@@ -141,7 +175,6 @@ const MyCollege = () => {
                           <p className="text-muted-foreground">{admission.candidateName}</p>
                         </div>
                       </div>
-
                       <div className="flex items-start gap-3">
                         <BookOpen className="h-5 w-5 text-primary mt-1" />
                         <div>
@@ -149,7 +182,6 @@ const MyCollege = () => {
                           <p className="text-muted-foreground">{admission.subject}</p>
                         </div>
                       </div>
-
                       <div className="flex items-start gap-3">
                         <Mail className="h-5 w-5 text-primary mt-1" />
                         <div>
@@ -157,7 +189,6 @@ const MyCollege = () => {
                           <p className="text-muted-foreground">{admission.email}</p>
                         </div>
                       </div>
-
                       <div className="flex items-start gap-3">
                         <Phone className="h-5 w-5 text-primary mt-1" />
                         <div>
@@ -177,7 +208,6 @@ const MyCollege = () => {
                           </p>
                         </div>
                       </div>
-
                       <div className="flex items-start gap-3">
                         <MapPin className="h-5 w-5 text-primary mt-1" />
                         <div>
@@ -185,7 +215,6 @@ const MyCollege = () => {
                           <p className="text-muted-foreground">{admission.address}</p>
                         </div>
                       </div>
-
                       {admission.imageUrl && (
                         <div>
                           <p className="font-semibold mb-2">Photo</p>
@@ -201,18 +230,14 @@ const MyCollege = () => {
 
                   <div className="mt-8 pt-6 border-t border-border">
                     <h3 className="text-xl font-semibold mb-4">Leave a Review</h3>
-                    
+
                     {existingReview ? (
                       <div className="bg-secondary p-4 rounded-lg">
                         <div className="flex gap-1 mb-2">
                           {Array.from({ length: 5 }).map((_, i) => (
                             <Star
                               key={i}
-                              className={`h-5 w-5 ${
-                                i < existingReview.rating
-                                  ? "fill-yellow-400 text-yellow-400"
-                                  : "text-gray-300"
-                              }`}
+                              className={`h-5 w-5 ${i < existingReview.rating ? "fill-yellow-400 text-yellow-400" : "text-gray-300"}`}
                             />
                           ))}
                         </div>
@@ -229,7 +254,7 @@ const MyCollege = () => {
                             {Array.from({ length: 5 }).map((_, i) => (
                               <button
                                 key={i}
-                                onClick={() => handleRatingClick(admission.id, i + 1)}
+                                onClick={() => handleRatingClick(admission._id, i + 1)}
                                 className="transition-transform hover:scale-110"
                               >
                                 <Star
@@ -249,13 +274,13 @@ const MyCollege = () => {
                           <Textarea
                             placeholder="Share your experience with this college..."
                             value={currentReview?.comment || ""}
-                            onChange={(e) => handleCommentChange(admission.id, e.target.value)}
+                            onChange={(e) => handleCommentChange(admission._id, e.target.value)}
                             rows={4}
                           />
                         </div>
 
                         <Button
-                          onClick={() => handleSubmitReview(admission.id)}
+                          onClick={() => handleSubmitReview(admission._id)}
                           className="bg-gradient-to-r from-primary to-accent font-bold group-hover:scale-105 transition-transform duration-300 cursor-pointer"
                         >
                           Submit Review
