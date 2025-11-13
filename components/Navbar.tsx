@@ -191,56 +191,80 @@ const handleSaveProfile = async () => {
           </button>
         </div>
 
-        {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-border animate-fade-in">
-            <div className="flex flex-col gap-2">
-              {navItems.map((item) => {
-                const isActive = pathname === item.path;
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.path}
-                    onClick={() => setIsMenuOpen(false)}
-                    className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
-                      isActive
-                        ? "bg-primary text-white"
-                        : "text-foreground hover:bg-secondary"
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                );
-              })}
-              <div className="flex flex-col gap-2 mt-4 px-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                  className="gap-2 justify-start cursor-pointer"
-                >
-                  {theme === "dark" ? (
-                    <>
-                      <Sun className="h-4 w-4" />
-                      Light Mode
-                    </>
-                  ) : (
-                    <>
-                      <Moon className="h-4 w-4" />
-                      Dark Mode
-                    </>
-                  )}
-                </Button>
-                <Button variant="ghost" size="sm" className="gap-2 justify-start">
-                  <User className="h-4 w-4" />
-                  Login
-                </Button>
-                <Button size="sm" className="btn-gradient">
-                  Sign Up
-                </Button>
-              </div>
-            </div>
-          </div>
+{isMenuOpen && (
+  <div className="md:hidden py-4 border-t border-border animate-fade-in">
+    <div className="flex flex-col gap-2">
+      {navItems.map((item) => {
+        const isActive = pathname === item.path;
+        return (
+          <Link
+            key={item.name}
+            href={item.path}
+            onClick={() => setIsMenuOpen(false)}
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+              isActive
+                ? "bg-primary text-white"
+                : "text-foreground hover:bg-secondary"
+            }`}
+          >
+            {item.name}
+          </Link>
+        );
+      })}
+
+      <div className="flex flex-col gap-2 mt-4 px-4">
+        
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="gap-2 justify-start cursor-pointer"
+        >
+          {theme === "dark" ? (
+            <>
+              <Sun className="h-4 w-4" /> Light Mode
+            </>
+          ) : (
+            <>
+              <Moon className="h-4 w-4" /> Dark Mode
+            </>
+          )}
+        </Button>
+
+        
+        {session ? (
+          <>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setIsEditModalOpen(true)}
+              className="gap-2 justify-start"
+            >
+              <User className="h-4 w-4" /> Edit Profile
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => signOut()}
+              className="gap-2 justify-start"
+            >
+              <User className="h-4 w-4" /> Logout
+            </Button>
+          </>
+        ) : (
+          <>
+            <Link href="/auth">
+              <Button size="sm" className="btn-gradient w-full text-center">
+                <User className="h-4 w-4 mr-1" /> Sign Up or Login
+              </Button>
+            </Link>
+          </>
         )}
+      </div>
+    </div>
+  </div>
+)}
+
       </div>
     </nav>
 
