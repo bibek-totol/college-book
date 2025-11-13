@@ -27,12 +27,33 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
-
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
 const CollegeDetails = () => {
   const params = useParams();
   const router = useRouter();
   const id = params?.id;
   const college = typeof id === "string" ? getCollegeById(id) : undefined;
+
+
+   const { data: session, status } = useSession();
+  
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/auth"); 
+    }
+  }, [status, router]);
+
+//   if (status === "loading") {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen text-lg">
+//         Checking authentication...
+//       </div>
+//     );
+//   }
+
+  if (!session) return null; 
 
   if (!college) {
     return (

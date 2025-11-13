@@ -1,45 +1,38 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import "./App.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Providers from "./providers/Providers"; 
-import "@radix-ui/themes/styles.css";
+"use client";
+import { useState, useEffect } from "react";
 import { Theme } from "@radix-ui/themes";
 import { Toaster } from "sonner";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+import Providers from "./providers/Providers";
+import Loader from "@/components/Loader";
+import "./globals.css";
+import "./App.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
+export default function RootLayout({ children } : { children: React.ReactNode }) {
+  const [loading, setLoading] = useState(true);
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+  useEffect(() => {
+    const timer = setTimeout(() => setLoading(false), 2000); 
+    return () => clearTimeout(timer);
+  }, []);
 
-export const metadata: Metadata = {
-  title: "EduBook",
-  description: "College admission and reviews app",
-};
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
   return (
     <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      > <Theme >
-        <Providers>
-          <Navbar />
-          <main>{children}</main>
-           <Toaster position="bottom-right" richColors />
-          <Footer />
-        </Providers>
+      <body className="antialiased">
+        <Theme>
+          <Providers>
+            {loading ? (
+              <Loader />
+            ) : (
+              <>
+                <Navbar />
+                <main>{children}</main>
+                <Toaster position="bottom-right" richColors />
+                <Footer />
+              </>
+            )}
+          </Providers>
         </Theme>
       </body>
     </html>
