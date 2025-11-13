@@ -7,8 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { colleges } from "@/data/colleges";
-
 import { toast } from "sonner";
+import { Spinner } from "@radix-ui/themes";
 
 const Admission = () => {
   const router = useRouter();
@@ -25,6 +25,7 @@ const Admission = () => {
     dateOfBirth: "",
     image: null as File | null,
   });
+  const [loading, setLoading] = useState(false); // <-- loading state
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -38,44 +39,47 @@ const Admission = () => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!selectedCollege) {
-    toast?.error("Please select a college");
-    return;
-  }
-
-  const college = colleges.find((c) => c.id === selectedCollege);
-
-  const submissionData = {
-    collegeId: selectedCollege,
-    collegeName: college?.name || "",
-    ...formData,
-    imageUrl: formData.image ? URL.createObjectURL(formData.image) : null, 
-  };
-
-  try {
-    const res = await fetch("/api/admissions", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(submissionData),
-    });
-
-    const result = await res.json();
-
-    if (!res.ok) throw new Error(result.error || "Submission failed");
-
-    toast?.success("Application submitted successfully!");
-    router.push("/mycollege");
-  } catch (err) {
-    if (err instanceof Error) {
-      toast?.error(err.message);
-    } else {
-      toast?.error(String(err));
+    if (!selectedCollege) {
+      toast?.error("Please select a college");
+      return;
     }
-  }
-};
 
+    setLoading(true); // start loading
+
+    const college = colleges.find((c) => c.id === selectedCollege);
+
+    const submissionData = {
+      collegeId: selectedCollege,
+      collegeName: college?.name || "",
+      ...formData,
+      imageUrl: formData.image ? URL.createObjectURL(formData.image) : null,
+    };
+
+    try {
+      const res = await fetch("/api/admissions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(submissionData),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) throw new Error(result.error || "Submission failed");
+
+      toast?.success("Application submitted successfully!");
+      router.push("/mycollege");
+    } catch (err) {
+      if (err instanceof Error) {
+        toast?.error(err.message);
+      } else {
+        toast?.error(String(err));
+      }
+    } finally {
+      setLoading(false); // stop loading
+    }
+  };
 
   return (
     <div className="min-h-screen pt-20 pb-12 bg-background transition-colors duration-300">
@@ -89,7 +93,6 @@ const Admission = () => {
           </p>
         </div>
 
-        
         <Card className="mb-8 shadow-card">
           <CardHeader>
             <CardTitle>Select a College</CardTitle>
@@ -116,7 +119,6 @@ const Admission = () => {
           </CardContent>
         </Card>
 
-        
         {selectedCollege && (
           <Card className="shadow-card">
             <CardHeader>
@@ -214,10 +216,17 @@ const Admission = () => {
 
                 <Button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-primary to-accent font-bold  group-hover:scale-105 transition-transform duration-300 cursor-pointer"
+                  className="w-full bg-gradient-to-r from-primary to-accent font-bold flex justify-center items-center gap-2 cursor-pointer"
                   size="lg"
+                  disabled={loading}
                 >
-                  Submit Application
+                  {loading ? (
+                    <>
+                      <Spinner className="w-6 h-6" /> <span>Submitting...</span>
+                    </>
+                  ) : (
+                    <span>Submit Application</span>
+                  )}
                 </Button>
               </form>
             </CardContent>
