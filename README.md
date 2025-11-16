@@ -1,36 +1,109 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📘 College Booking Web Application – MERN Stack  
+A full-stack college services booking platform with authentication, booking, admissions, reviews, and profile management.
 
-## Getting Started
+## 🚀 Live Demo  
+🔗 **Client:** https://college-book-chi.vercel.app/   
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📌 Project Overview  
+This web application allows users to explore colleges, complete admission forms, submit reviews, and manage their profiles.  
+The platform provides a clean and user-friendly interface, ensuring a smooth booking and browsing experience.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+This project is developed using **React, Node.js, Express.js, MongoDB**, and **Tailwind CSS**.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🎯 Key Features  
 
-## Learn More
+### 🔹 Home Page
+- Search bar to find colleges by name  
+- Featured section with 3 creative college cards  
+- College image gallery (graduates’ photos)  
+- Research papers section  
+- Reviews and feedback section  
 
-To learn more about Next.js, take a look at the following resources:
+### 🔹 College Route
+- Displays 5–6 college cards  
+- Each card contains:
+  - Image  
+  - Name  
+  - Rating  
+  - Admission Date  
+  - Research Count  
+  - “Details” Button  
+- Clicking “Details” shows complete college information  
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔹 College Details Page
+Includes detailed information:
+- Images  
+- Admission process  
+- Events  
+- Sports categories  
+- Research history  
+- Reviews  
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 🔹 Admission Route
+- Displays list of colleges  
+- Clicking one opens the Admission Form  
+- Fields include:
+  - Candidate Name  
+  - Subject  
+  - Email  
+  - Phone  
+  - Address  
+  - Date of Birth  
+  - Image Upload  
+- On submission, data appears in “My College” route  
 
-## Deploy on Vercel
+### 🔹 My College Route
+- Shows admitted college details  
+- User can submit reviews with rating  
+- Reviews appear on the Home reviews section  
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### 🔹 Authentication
+- Email/Password  
+- Google Auth  
+- Social Media Login  
+- Password Reset  
+- Must be logged in to:
+  - View college details  
+  - Add reviews  
+- Shows logged-in user’s profile name  
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🔹 Profile Route
+- Shows user details  
+- Edit:
+  - Name  
+  - Email  
+  - University  
+  - Address  
+- Save to update profile  
+
+### 🔹 Other Features
+- Fully responsive UI  
+- Custom creative 404 page  
+
+---
+
+## 🛠 Tech Stack  
+
+### Frontend
+- React.js  
+- React Router  
+- Tailwind CSS  
+- Axios  
+- Firebase (optional for auth)
+
+### Backend
+- Node.js  
+- Express.js  
+- MongoDB Atlas  
+- JWT Authentication  
+
+### Tools & Deployment
+- GitHub  
+- Netlify / Vercel / Firebase Hosting  
+- Postman  
+
+---
